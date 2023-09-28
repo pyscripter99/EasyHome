@@ -1,38 +1,22 @@
-# create-svelte
+# Easy Home
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+A simple new tab page in development
 
-## Creating a project
+`⚠️ this project only supports chrome and is in early development!`
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Install
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+1. Goto: chrome://extensions
+2. Enable developer mode by clicking the switch on the top-right
+3. Download EasyHome from: https://github.com/pyscripter99/EasyHome/releases/latest
+4. Unzip to a folder you will not delete, e.g. C:/Users/.../, or ~/
+5. Go back to chrome://extensions
+6. Click load unpacked and select EasyHome (from wherever you extracted it)
+7. Open a new tab and enjoy
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## Roadmap
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+-   Custom widgets (maybe)
+-   Custom layouts
+-   Themes
+-   Better code
