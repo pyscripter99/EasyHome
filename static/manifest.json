@@ -1,0 +1,10 @@
+{
+    "name": "EasyHome",
+    "description": "The cleanest new tab page for chrome",
+    "version": "1.0.1",
+    "manifest_version": 3,
+    "chrome_url_overrides": {
+        "newtab": "index.html"
+    },
+    "permissions": ["storage", "topSites", "favicon", "tabs"]
+}
