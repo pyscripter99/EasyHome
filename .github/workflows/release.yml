@@ -1,53 +1,73 @@
 # Workflow to build and deploy a SvelteKit website to GitHub Pages
 name: Build
 
-on: 
-  push:
-    branches: ["main"]
+on:
+    push:
+        branches: ["main"]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+    contents: write
+    pages: write
+    id-token: write
 
 jobs:
-  build-site:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      
-      - name: Install dependencies
-        run: npm i
-      
-      - name: Build site
-        run: npm run build
-          
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: 'build/'
-      - run: "cp -R build/ EasyHome/"
-      - name: Zip build
-        uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r EasyHome.zip EasyHome
-      - uses: phish108/autotag-action@v1.1.55
-        id: tagger
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN}}
-      - name: Create release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "EasyHome.zip"
-          bodyFile: "README.md"
-          generateReleaseNotes: true
-          tag: ${{ steps.tagger.outputs.new-tag }}
+    build-site:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  persist-credentials: false
+                  fetch-depth: 0
+            - uses: phish108/autotag-action@v1.1.55
+              id: tagger
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN}}
+                  dry-run: true
+
+            - name: Patch Version
+              run: "echo ${{steps.tagger.outputs.new-tag}} > static/version"
+            - name: Commit files
+              run: |
+                  git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git config --local user.name "github-actions[bot]"
+                  git commit -a -m "Patch Version"
+            - name: Push changes
+              uses: ad-m/github-push-action@master
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  branch: ${{ github.ref }}
+
+            - name: Install Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+
+            - name: Install dependencies
+              run: npm i
+
+            - name: Build site
+              run: npm run build
+
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v1
+              with:
+                  path: "build/"
+            - run: "cp -R build/ EasyHome/"
+            - name: Zip build
+              uses: montudor/action-zip@v1
+              with:
+                  args: zip -qq -r EasyHome.zip EasyHome
+            - uses: phish108/autotag-action@v1.1.55
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN}}
+            - name: Create release
+              uses: ncipollo/release-action@v1
+              with:
+                  artifacts: "EasyHome.zip"
+                  bodyFile: "README.md"
+                  generateReleaseNotes: true
+                  tag: ${{ steps.tagger.outputs.new-tag }}
