@@ -15,14 +15,11 @@
                 return data.json();
             })
             .then(async (data) => {
-                fetch("/version").then(async (data) => {
-                    currentVersion = await data.text();
-                });
                 currentVersion = await fetch("/version").then((d) => {
                     return d.text();
                 });
                 downloadLink = data.assets[0].browser_download_url;
-                if (currentVersion !== data.tag_name) {
+                if (currentVersion != data.tag_name) {
                     update.set(true);
                 }
             });
